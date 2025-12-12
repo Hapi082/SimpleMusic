@@ -21,6 +21,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -95,6 +100,9 @@ class MainActivity : AppCompatActivity() {
         addButton.setOnClickListener {
             openDocumentLauncher.launch(arrayOf("audio/mpeg", "audio/*"))
         }
+
+        requestNotificationPermissionIfNeeded()
+
     }
 
     private fun updateEmptyView() {
@@ -144,4 +152,21 @@ class MainActivity : AppCompatActivity() {
         // .mp3 など拡張子を取ってそれっぽくする
         return name?.substringBeforeLast(".")
     }
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            // ここではログだけ。必要ならトーストなども可。
+            // isGranted == true なら通知が出せる
+        }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+        val granted = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+        if (!granted) {
+            requestNotificationPermissionLauncher.launch(permission)
+        }
+    }
+
 }

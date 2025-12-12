@@ -11,6 +11,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.simplemusicplayer.player.PlayerController
+import com.example.simplemusicplayer.util.TimeFormatUtils
+
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -50,7 +52,8 @@ class PlayerActivity : AppCompatActivity() {
             if (playerController.isPrepared()) {
                 val pos = playerController.getCurrentPosition()
                 seekBarProgress.progress = pos
-                elapsedTimeText.text = formatMillis(pos)
+                elapsedTimeText.text = TimeFormatUtils.formatMillis(pos)
+
             }
             if (playerController.isPlaying()) {
                 progressHandler.postDelayed(this, 500L)
@@ -171,7 +174,8 @@ class PlayerActivity : AppCompatActivity() {
                 fromUser: Boolean
             ) {
                 if (fromUser) {
-                    elapsedTimeText.text = formatMillis(progress)
+                    elapsedTimeText.text = TimeFormatUtils.formatMillis(progress)
+
                 }
             }
 
@@ -199,7 +203,7 @@ class PlayerActivity : AppCompatActivity() {
             val duration = playerController.getDuration()
             if (duration > 0) {
                 seekBarProgress.max = duration
-                totalTimeText.text = formatMillis(duration)
+                totalTimeText.text = TimeFormatUtils.formatMillis(duration)
             } else {
                 totalTimeText.text = "--:--"
             }
@@ -231,13 +235,6 @@ class PlayerActivity : AppCompatActivity() {
         progressHandler.removeCallbacks(progressUpdater)
     }
 
-    private fun formatMillis(ms: Int): String {
-        if (ms <= 0) return "00:00"
-        val totalSec = ms / 1000
-        val min = totalSec / 60
-        val sec = totalSec % 60
-        return String.format("%02d:%02d", min, sec)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

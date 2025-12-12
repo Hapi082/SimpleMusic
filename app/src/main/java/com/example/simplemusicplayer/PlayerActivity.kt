@@ -15,6 +15,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.simplemusicplayer.player.MusicPlaybackService
+import android.media.AudioManager
+
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -37,6 +39,10 @@ class PlayerActivity : AppCompatActivity() {
     private var service: MusicPlaybackService? = null
     private var bound = false
 
+    private lateinit var audioManager: AudioManager
+    private var maxMusicVolume: Int = 0
+
+
     private val uiHandler = Handler(Looper.getMainLooper())
     private val uiTicker = object : Runnable {
         override fun run() {
@@ -58,6 +64,9 @@ class PlayerActivity : AppCompatActivity() {
                     if (s.isPlaying()) android.R.drawable.ic_media_pause
                     else android.R.drawable.ic_media_play
                 )
+
+                volumeSeekBar.progress = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+
             }
             uiHandler.postDelayed(this, 500L)
         }
@@ -99,6 +108,27 @@ class PlayerActivity : AppCompatActivity() {
         repeat = findViewById(R.id.btn_repeat)
 
         volumeSeekBar = findViewById(R.id.seekbar_volume)
+
+        audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+        maxMusicVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+
+        volumeSeekBar.max = maxMusicVolume
+        volumeSeekBar.progress = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+
+        volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    audioManager.setStreamVolume(
+                        AudioManager.STREAM_MUSIC,
+                        progress.coerceIn(0, maxMusicVolume),
+                        0
+                    )
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
 
         trackId = intent.getLongExtra(EXTRA_TRACK_ID, -1L)
         titleText.text = intent.getStringExtra(EXTRA_TRACK_TITLE) ?: "Track"

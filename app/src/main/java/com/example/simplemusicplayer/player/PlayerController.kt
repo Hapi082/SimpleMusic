@@ -3,6 +3,8 @@ package com.example.simplemusicplayer.player
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
+import android.media.AudioAttributes
+
 
 /**
  * 単一トラックを再生するためのシンプルなコントローラ。
@@ -40,6 +42,13 @@ class PlayerController(private val context: Context) {
         val mp = MediaPlayer()
         mediaPlayer = mp
         prepared = false
+
+        mp.setAudioAttributes(
+            AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build()
+        )
 
         mp.setDataSource(context, uri)
         mp.setOnPreparedListener {

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SimpleMusicPlayer</string>
+    <string name="add_track">曲を追加</string>
+    <string name="delete_track">曲を削除</string>
+</resources>

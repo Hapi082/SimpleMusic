@@ -20,6 +20,8 @@ import com.example.simplemusicplayer.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.content.Intent
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,20 +59,25 @@ class MainActivity : AppCompatActivity() {
         adapter = TrackListAdapter(
             items = mutableListOf(),
             onItemClick = { track ->
-                Log.d("MainActivity", "行タップ: ${track.title}")
-                // 今後のStepで PlayerActivity へ遷移する処理を実装
+                // PlayerActivity へ遷移
+                val intent = Intent(this, PlayerActivity::class.java).apply {
+                    putExtra(PlayerActivity.EXTRA_TRACK_ID, track.id)
+                    putExtra(PlayerActivity.EXTRA_TRACK_TITLE, track.title)
+                    putExtra(PlayerActivity.EXTRA_TRACK_URI, track.uri)
+                }
+                startActivity(intent)
             },
             onDeleteClick = { track ->
                 Log.d("MainActivity", "削除タップ: ${track.title}")
                 adapter.removeTrack(track)
                 updateEmptyView()
 
-                // DBからも削除
                 lifecycleScope.launch(Dispatchers.IO) {
                     repository.deleteTrack(track.id)
                 }
             }
         )
+
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -97,10 +104,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handlePickedAudio(uri: Uri) {
+        // ★ 端末上のURIへの読み取り権限を永続化（OpenDocument用）
+        try {
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (e: SecurityException) {
+            Log.w("MainActivity", "takePersistableUriPermission failed", e)
+        }
+
         val title = getDisplayNameFromUri(uri) ?: "Unknown Track"
 
         val track = Track(
-            id = System.currentTimeMillis(), // 簡易ID（後で改善してもよい）
+            id = System.currentTimeMillis(),
             title = title,
             uri = uri.toString(),
             addedAt = System.currentTimeMillis()
@@ -114,6 +131,7 @@ class MainActivity : AppCompatActivity() {
             repository.addTrack(track)
         }
     }
+
 
     private fun getDisplayNameFromUri(uri: Uri): String? {
         var name: String? = null

@@ -2,4 +2,11 @@
     <string name="app_name">SimpleMusicPlayer</string>
     <string name="add_track">曲を追加</string>
     <string name="delete_track">曲を削除</string>
+    <string name="back_to_list">マイリストに戻る</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="prev_track">前の曲</string>
+    <string name="next_track">次の曲</string>
+    <string name="play_or_pause">再生 / 一時停止</string>
+    <string name="repeat_one">1曲リピート</string>
+    <string name="volume_label">音量</string>
 </resources>

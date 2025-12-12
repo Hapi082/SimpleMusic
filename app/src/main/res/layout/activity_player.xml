@@ -80,43 +80,50 @@
         app:layout_constraintTop_toBottomOf="@id/seekbar_progress"
         app:layout_constraintEnd_toEndOf="@id/seekbar_progress" />
 
-    <!-- 前の曲ボタン -->
-    <ImageButton
-        android:id="@+id/btn_prev"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_media_previous"
-        android:contentDescription="@string/prev_track"
+    <!-- 再生コントロール（中央・横一列） -->
+    <LinearLayout
+        android:id="@+id/layout_playback_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@id/tv_total_time"
-        app:layout_constraintEnd_toStartOf="@id/btn_play_pause"
-        app:layout_constraintHorizontal_chainStyle="packed" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- 再生 / 一時停止ボタン -->
-    <ImageButton
-        android:id="@+id/btn_play_pause"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_media_play"
-        android:contentDescription="@string/play_or_pause"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_total_time"
-        app:layout_constraintStart_toEndOf="@id/btn_prev"
-        app:layout_constraintEnd_toStartOf="@id/btn_next" />
+        <!-- 前の曲ボタン -->
+        <ImageButton
+            android:id="@+id/btn_prev"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_media_previous"
+            android:contentDescription="@string/prev_track"
+            android:layout_marginEnd="24dp" />
 
-    <!-- 次の曲ボタン -->
-    <ImageButton
-        android:id="@+id/btn_next"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_media_next"
-        android:contentDescription="@string/next_track"
-        app:layout_constraintTop_toTopOf="@id/btn_play_pause"
-        app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
-        app:layout_constraintStart_toEndOf="@id/btn_play_pause" />
+        <!-- 再生 / 一時停止ボタン（中央・大きめ） -->
+        <ImageButton
+            android:id="@+id/btn_play_pause"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_media_play"
+            android:contentDescription="@string/play_or_pause"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp" />
+
+        <!-- 次の曲ボタン -->
+        <ImageButton
+            android:id="@+id/btn_next"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_media_next"
+            android:contentDescription="@string/next_track" />
+
+    </LinearLayout>
+
 
     <!-- リピートボタン -->
     <ImageButton
@@ -127,7 +134,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@android:drawable/ic_menu_rotate"
         android:contentDescription="@string/repeat_one"
-        app:layout_constraintTop_toBottomOf="@id/btn_play_pause"
+        app:layout_constraintTop_toBottomOf="@id/layout_playback_controls"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
